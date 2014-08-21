@@ -6,6 +6,7 @@ includes Login and identification for Q
 Avatars for male and female voices
 multiple commands
 free-form command processing
+clockwork integration includes shared state
 
 libs
 
