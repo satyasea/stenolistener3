@@ -1,13 +1,24 @@
 
 
-stenolistener (Q) alpha v008
-+ Singleton speechkit for main app and listener
-+ Smart Commands and TalkBack
+stenolistener3 (Q Assistant) alpha v009
+Includes integrated business app (IBA) Clockwork Orange Cloud
+includes Login and identification for Q
+Avatars for male and female voices
+multiple commands
+free-form command processing
 
 libs
+
+Voice
 Requires nuance support library and .so file
 nmdp_speech_kit.jar
 armeabi/libnmsp_speex.so
+
+Location:
+google play services.jar
+google support libs 4.jar
+
+
 
 
 commands:
@@ -23,7 +34,7 @@ telephone
 dial
 call
 
-clock (clock is only stubbed with commands, clockwork not yet in Q app):
+clock (in/out)
 clock
 punch
 check
