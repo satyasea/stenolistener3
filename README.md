@@ -8,9 +8,10 @@ multiple commands
 free-form command processing
 clockwork integration includes shared state
 
-libs
 
-Voice
+libraries:
+
+Voice:
 Requires nuance support library and .so file
 nmdp_speech_kit.jar
 armeabi/libnmsp_speex.so
