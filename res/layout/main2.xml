@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<TextView
+    android:layout_width="fill_parent"
+    android:visibility="invisible"
+    android:id="@+id/txt_user"
+    android:layout_height="wrap_content" android:textSize="20dp" android:text="no user"/>
+
+    <ImageView
+            android:layout_height="120dp"
+            android:layout_width="fill_parent"
+            android:id="@+id/img_q"
+            android:src="@drawable/q" android:layout_marginTop="20dp" android:layout_marginBottom="30dp" android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp">
+    </ImageView>
+
+    <Button android:layout_height="wrap_content" android:text="Choose Avatar" android:layout_width="fill_parent" android:id="@+id/btn_pers"></Button>
+    <Button android:layout_height="wrap_content" android:text="Voice Commands" android:layout_width="fill_parent" android:id="@+id/btn_dictation"></Button>
+    <Button android:layout_height="wrap_content" android:text="ClockWork Cloud" android:layout_width="fill_parent" android:id="@+id/btn_clock"></Button>
+<Button android:layout_height="wrap_content" android:text="Identify" android:layout_width="fill_parent" android:id="@+id/btn_tts"></Button>
+    <Button android:layout_height="wrap_content" android:text="Command History" android:layout_width="fill_parent" android:id="@+id/btn_what"></Button>
+    <Button android:layout_height="wrap_content" android:text="Exit" android:layout_width="fill_parent" android:id="@+id/btn_quit"></Button>
+</LinearLayout>

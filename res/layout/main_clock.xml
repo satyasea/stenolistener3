@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+        >
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome"
+            android:id="@+id/hello"
+            android:textSize="20dp"
+            android:visibility="invisible"
+            />
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Hello World, ClockWorkMainActivity"
+            android:id="@+id/txt"
+            android:visibility="invisible"
+            />
+<ImageView android:layout_width="fill_parent"
+           android:id="@+id/img"
+           android:layout_height="wrap_content"
+           android:visibility="invisible"
+           android:layout_marginBottom="30dp"
+        />
+    <Button android:layout_height="wrap_content" android:text="Clock In" android:layout_width="fill_parent"   android:visibility="invisible" android:id="@+id/btn_login"></Button>
+    <Button android:layout_height="wrap_content" android:text="Clock Out" android:layout_width="fill_parent"   android:visibility="invisible" android:id="@+id/btn_logout"></Button>
+    <Button android:layout_height="wrap_content"  android:text="Go Back" android:layout_width="fill_parent" android:visibility="invisible" android:id="@+id/btn_quit"></Button>
+</LinearLayout>
+
