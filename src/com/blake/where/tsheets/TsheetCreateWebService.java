@@ -1,5 +1,6 @@
 package com.blake.where.tsheets;
 
+import com.blake.Config;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -24,7 +25,9 @@ public class TsheetCreateWebService {
     public static String postCreateSheetEntry(int worker_id) {
         HttpClient httpclient = new DefaultHttpClient();
       String link="http://ineeduneed.com/clockwork/tsheets/tsheets_add.php";
-       // String link="http://ineeduneed.com/clockwork_aeh/tsheets/tsheets_add.php";
+        if(Config.IS_AEH_BUILD) {
+             link="http://ineeduneed.com/clockwork_aeh/tsheets/tsheets_add.php";
+        }
         HttpPost httppost = new HttpPost(link);
         try {
             List<NameValuePair> params = new ArrayList<NameValuePair>(1);

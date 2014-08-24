@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.blake.Config;
 import com.nuance.nmdp.sample.MainView2;
 import com.nuance.nmdp.sample.R;
 
@@ -105,11 +106,21 @@ public class LoginActivity extends Activity implements OnLoginTaskCompleted {
             sb.append("Phone 10 numbers!");
             message.setTextColor(Color.RED);
             fail=true;
+            if(Config.IS_DEMO){
+                if(phone.equals("000")) {
+                    fail = false;
+                    phone = "8325881755";
+                }
+            }
         }
         if(password.length()<7){
             sb.append(" Password 7 digits!");
             message.setTextColor(Color.RED);
             fail = true;
+            if(Config.IS_DEMO){
+                fail = false;
+                password="1234567";
+            }
         }
         if(fail){
             message.setText(sb.toString());

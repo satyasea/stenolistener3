@@ -14,7 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.blake.Config;
 import com.blake.StartListenerService;
+import com.blake.db.MySQLiteHelper;
 import com.blake.login.ClockworkUserBean;
 import com.blake.login.LoginActivity;
 import com.blake.personalize.PersonalizeActivity;
@@ -128,13 +130,10 @@ public class MainView2 extends Activity {
         buttonQ.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _speechKit = null;
                 finish();
-
                 //start listener again, if we are quitting.
                 Intent service = new Intent(MainView2.this, StartListenerService.class);
                 startService(service);
-
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -180,6 +179,15 @@ public class MainView2 extends Activity {
         if (_speechKit != null) {
             _speechKit.release();
             _speechKit = null;
+            if(Config.IS_MULTIUSER){
+                //destroy any data on quit of application.
+                SharedPreferences settings = getSharedPreferences(MainView2.PREFS_NAME, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.clear();
+                editor.commit();
+                MySQLiteHelper db = new MySQLiteHelper(this);
+                db.deleteAllData();
+            }
         }
     }
 

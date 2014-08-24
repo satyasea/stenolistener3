@@ -14,6 +14,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.blake.Config;
+
+
+
+
 /**
  * Created by blake on 7/12/14.
  */
@@ -23,7 +28,9 @@ public class ClockPunchWebService {
     public static String postClockPunchEntry(int worker_id, int entry_type, String latitude, String longitude) {
         HttpClient httpclient = new DefaultHttpClient();
         String link="http://ineeduneed.com/clockwork/clock_insert_entry.php";
-       // String link="http://ineeduneed.com/clockwork_aeh/clock_insert_entry.php";
+        if(Config.IS_AEH_BUILD){
+            link="http://ineeduneed.com/clockwork_aeh/clock_insert_entry.php";
+        }
         HttpPost httppost = new HttpPost(link);
         try {
             List<NameValuePair> params = new ArrayList<NameValuePair>(4);

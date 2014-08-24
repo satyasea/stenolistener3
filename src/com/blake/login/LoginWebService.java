@@ -1,5 +1,6 @@
 package com.blake.login;
 
+import com.blake.Config;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -25,7 +26,9 @@ public class LoginWebService {
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
         String link="http://ineeduneed.com/clockwork/clock_auth.php";
-     //   String link="http://ineeduneed.com/clockwork_aeh/clock_auth.php";
+        if(Config.IS_AEH_BUILD) {
+            link="http://ineeduneed.com/clockwork_aeh/clock_auth.php";
+        }
         HttpPost httppost = new HttpPost(link);
 
         try {

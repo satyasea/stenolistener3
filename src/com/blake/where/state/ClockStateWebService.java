@@ -1,5 +1,6 @@
 package com.blake.where.state;
 
+import com.blake.Config;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -30,7 +31,9 @@ public class ClockStateWebService {
     public static String obtainLastEntryType(String workerId) {
         HttpClient httpclient = new DefaultHttpClient();
         String link="http://ineeduneed.com/clockwork/clock_state.php";
-     //   String link="http://ineeduneed.com/clockwork_aeh/clock_state.php";
+        if(Config.IS_AEH_BUILD) {
+            link="http://ineeduneed.com/clockwork_aeh/clock_state.php";
+        }
         HttpPost httppost = new HttpPost(link);
 
         try {

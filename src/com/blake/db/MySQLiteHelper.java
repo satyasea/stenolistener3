@@ -62,6 +62,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
+    public void deleteAllData(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_COMMANDS);
+    }
+
 
     public void addCommand(ActionCommand act){
         //for logging
