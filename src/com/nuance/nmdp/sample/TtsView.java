@@ -1,5 +1,6 @@
 package com.nuance.nmdp.sample;
 
+import com.nuance.nmdp.speechkit.SpeechKit;
 import com.nuance.nmdp.speechkit.Vocalizer;
 import com.nuance.nmdp.speechkit.SpeechError;
 
@@ -21,6 +22,8 @@ public class TtsView extends Activity
     
     private Vocalizer _vocalizer;
     private Object _lastTtsContext = null;
+
+    private SpeechKit _speechKit = null;
     
     private class SavedState
     {
@@ -33,6 +36,7 @@ public class TtsView extends Activity
     public TtsView()
     {
         super();
+        _speechKit = SpeechKitHolder.getSpeechKit(this);
     }
     
     /** Called when the activity is first created. */
@@ -106,7 +110,7 @@ public class TtsView extends Activity
                 updateCurrentText("Playing text: \"" + text + "\"", Color.GREEN, false);
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Vocalizer.Listener.onSpeakingBegin: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        + _speechKit.getSessionId() + "]");
             }
 
             @Override
@@ -123,7 +127,7 @@ public class TtsView extends Activity
                 }
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Vocalizer.Listener.onSpeakingDone: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        + _speechKit.getSessionId() + "]");
             }
         };
         
@@ -133,7 +137,7 @@ public class TtsView extends Activity
         if (savedState == null)
         {
             // Create a single Vocalizer here.
-            _vocalizer = MainView2.getSpeechKit().createVocalizerWithLanguage("en_US", vocalizerListener, new Handler());
+            _vocalizer = _speechKit.createVocalizerWithLanguage("en_US", vocalizerListener, new Handler());
 
             // Get selected voice from the spinner and set the Vocalizer voice
             Object item = spinner.getSelectedItem();

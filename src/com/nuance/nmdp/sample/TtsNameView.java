@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.*;
 import com.nuance.nmdp.speechkit.SpeechError;
+import com.nuance.nmdp.speechkit.SpeechKit;
 import com.nuance.nmdp.speechkit.Vocalizer;
 
 public class TtsNameView extends Activity
@@ -21,6 +22,7 @@ public class TtsNameView extends Activity
 
     private String output;
     private String avatar;
+
 
     private class SavedState
     {
@@ -34,11 +36,13 @@ public class TtsNameView extends Activity
     {
         super();
     }
-    
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
 
         SharedPreferences settings = getSharedPreferences(MainView2.PREFS_NAME, 0);
@@ -59,7 +63,7 @@ public class TtsNameView extends Activity
             img.setImageResource(R.drawable.money);
             mi6="Moneypenny";
         }else if(avatar.equals("Tom")){
-         //   img.setImageResource(R.drawable.q);
+            //   img.setImageResource(R.drawable.q);
             mi6="Q";
         }
         textHeader.setText(mi6 + " knows you.");
@@ -73,12 +77,13 @@ public class TtsNameView extends Activity
 
 
 
-         Button button = (Button)findViewById(R.id.btn_main);
+        Button button = (Button)findViewById(R.id.btn_main);
         button.setOnClickListener(new Button.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                finish();
                 Intent i = new Intent(TtsNameView.this, MainView2.class);
                 startActivity(i);
             }
@@ -143,7 +148,7 @@ public class TtsNameView extends Activity
             }
         });
         */
-        
+
         // Create Vocalizer listener
         Vocalizer.Listener vocalizerListener = new Vocalizer.Listener()
         {
@@ -152,12 +157,12 @@ public class TtsNameView extends Activity
                 updateCurrentText("Playing text: \"" + text + "\"", Color.GREEN, false);
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Vocalizer.Listener.onSpeakingBegin: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        +  SpeechKitHolder.getSpeechKit(TtsNameView.this).getSessionId() + "]");
             }
 
             @Override
             public void onSpeakingDone(Vocalizer vocalizer,
-                    String text, SpeechError error, Object context) 
+                                       String text, SpeechError error, Object context)
             {
                 // Use the context to detemine if this was the final TTS phrase
                 if (context != _lastTtsContext)
@@ -169,17 +174,21 @@ public class TtsNameView extends Activity
                 }
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Vocalizer.Listener.onSpeakingDone: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        +  SpeechKitHolder.getSpeechKit(TtsNameView.this).getSessionId() + "]");
             }
         };
-        
+
         // If this Activity is being recreated due to a config change (e.g. 
         // screen rotation), check for the saved state.
         SavedState savedState = (SavedState)getLastNonConfigurationInstance();
         if (savedState == null)
         {
             // Create a single Vocalizer here.
-            _vocalizer = MainView2.getSpeechKit().createVocalizerWithLanguage("en_US", vocalizerListener, new Handler());
+
+            //   _vocalizer = MainView2.getSpeechKit().createVocalizerWithLanguage("en_US", vocalizerListener, new Handler())
+
+            _vocalizer = SpeechKitHolder.getSpeechKit(this).createVocalizerWithLanguage("en_US", vocalizerListener, new Handler());
+
 
             // Get selected voice from the spinner and set the Vocalizer voice
             /*
@@ -193,7 +202,7 @@ public class TtsNameView extends Activity
             }
             */
 
-            _vocalizer.setVoice("Tom");
+            _vocalizer.setVoice(avatar);
 
             // Check for text from the intent (present if we came from DictationView)
 
@@ -213,19 +222,19 @@ public class TtsNameView extends Activity
             _vocalizer = savedState.Vocalizer;
             _lastTtsContext = savedState.Context;
             updateCurrentText(savedState.Text, savedState.TextColor, false);
-            
+
             // Need to update the listener, since the old listener is pointing at
             // the old TtsView activity instance.
             _vocalizer.setListener(vocalizerListener);
         }
 
-           // Todo: copied what was in the button action to here
+        // Todo: copied what was in the button action to here
         _lastTtsContext = new Object();
         _vocalizer.setVoice(avatar);
         _vocalizer.speakString(output, _lastTtsContext);
         updateCurrentText("Q is speaking...", Color.YELLOW, true);
     }
-    
+
     private void updateCurrentText(String text, int color, boolean onlyIfBlank)
     {
      /*   TextView v = (TextView)findViewById(R.id.text_currentTts);
@@ -237,7 +246,7 @@ public class TtsNameView extends Activity
         }
         */
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -247,14 +256,14 @@ public class TtsNameView extends Activity
             _vocalizer = null;
         }
     }
-    
+
     @Override
     public Object onRetainNonConfigurationInstance()
     {
         // Save the Vocalizer state, because we know the Activity will be
         // immediately recreated.
         TextView textView = (TextView)findViewById(R.id.text_currentTts);
-        
+
         SavedState savedState = new SavedState();
         savedState.Text = textView.getText().toString();
         savedState.TextColor = textView.getTextColors().getDefaultColor();

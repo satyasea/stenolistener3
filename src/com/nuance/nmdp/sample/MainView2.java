@@ -37,10 +37,7 @@ public class MainView2 extends Activity {
 
 
 
-    // Allow other activities to access the SpeechKit instance.
-    public static SpeechKit getSpeechKit() {
-        return _speechKit;
-    }
+
 
     /**
      * Called when the activity is first created.
@@ -70,7 +67,9 @@ public class MainView2 extends Activity {
         }
         // If this Activity is being recreated due to a config change (e.g. 
         // screen rotation), check for the saved SpeechKit instance.
-        _speechKit = (SpeechKit) getLastNonConfigurationInstance();
+     //   _speechKit = (SpeechKit) getLastNonConfigurationInstance();
+        _speechKit = SpeechKitHolder.getSpeechKit(this);
+
         boolean isNetWorkAvail = false;
         if (isNetworkAvailable(getApplicationContext())) {
             isNetWorkAvail = true;
@@ -94,14 +93,15 @@ public class MainView2 extends Activity {
         Log.d(TAG, "online=" + online);
         Log.d(TAG, "networked=" + isNetWorkAvail);
         //only initialize if speechkit is null....
-        if (_speechKit == null && (online | isNetWorkAvail)) {
-            //    Toast.makeText(this, "Nuance Speech kit initializing...", Toast.LENGTH_LONG).show();
-            //todo shared by all activities in app, static speechkit is initialized by singleton holder of static speechkit
-            _speechKit = SpeechKitHolder.getSpeechKit(this);
-            _speechKit.connect();
-            // TODO: Keep an eye out for audio prompts not working on the Droid 2 or other 2.2 devices.
+        if (_speechKit != null && (online | isNetWorkAvail)) {
             Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);
             _speechKit.setDefaultRecognizerPrompts(beep, Prompt.vibration(100), null, null);
+            _speechKit.connect();
+        }else if (_speechKit == null && (online | isNetWorkAvail)){
+            _speechKit = SpeechKitHolder.getSpeechKit(this);
+            Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);
+            _speechKit.setDefaultRecognizerPrompts(beep, Prompt.vibration(100), null, null);
+            _speechKit.connect();
         }
 
 
@@ -130,14 +130,25 @@ public class MainView2 extends Activity {
         buttonQ.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                //start listener again, if we are quitting.
-                Intent service = new Intent(MainView2.this, StartListenerService.class);
-                startService(service);
+
+
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+
+
+                finish();
+
+
+
+                //start listener again, if we are quitting.
+                Intent service = new Intent(MainView2.this, StartListenerService.class);
+                startService(service);
+
+
+
+
             }
         });
 

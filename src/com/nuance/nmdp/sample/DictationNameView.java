@@ -17,6 +17,7 @@ import com.blake.voice.tasks.ActionTask;
 import com.nuance.nmdp.speechkit.Recognition;
 import com.nuance.nmdp.speechkit.Recognizer;
 import com.nuance.nmdp.speechkit.SpeechError;
+import com.nuance.nmdp.speechkit.SpeechKit;
 
 
 public class DictationNameView extends Activity
@@ -35,6 +36,7 @@ public class DictationNameView extends Activity
 
     Button dictationButton = null;
     Button ttsNameButton = null;
+    private SpeechKit _speechKit = null;
 
     private class SavedState
     {
@@ -53,6 +55,7 @@ public class DictationNameView extends Activity
         _currentRecognizer = null;
         _listeningDialog = null;
         _destroyed = true;
+        _speechKit = SpeechKitHolder.getSpeechKit(this);
     }
 
     @Override
@@ -105,7 +108,7 @@ public class DictationNameView extends Activity
                 showDialog(LISTENING_DIALOG);
                 _listeningDialog.setStoppable(false);
             //    setResults(new Recognition.Result[0]);
-                _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
+                _currentRecognizer = _speechKit.createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
                 _currentRecognizer.start();
             }
         };
@@ -308,7 +311,7 @@ public class DictationNameView extends Activity
                 setResult(detail + "\n" + suggestion);
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Recognizer.Listener.onError: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        + _speechKit.getSessionId() + "]");
             }
 
             @Override
@@ -322,7 +325,7 @@ public class DictationNameView extends Activity
                // setResults(rs);
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Recognizer.Listener.onResults: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        + _speechKit.getSessionId() + "]");
                 //here we can capture the text...
                 System.out.println("bedbug********************************results 0-" + rs[0].getText());
                 // openEmail(rs[0].getText());

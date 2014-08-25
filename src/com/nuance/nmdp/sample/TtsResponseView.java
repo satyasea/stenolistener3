@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.blake.voice.tasks.ActionTask;
 import com.nuance.nmdp.speechkit.SpeechError;
+import com.nuance.nmdp.speechkit.SpeechKit;
 import com.nuance.nmdp.speechkit.Vocalizer;
 
 public class TtsResponseView extends Activity
@@ -26,6 +27,9 @@ public class TtsResponseView extends Activity
 
     String avatar;
 
+
+    private SpeechKit _speechKit = null;
+
     private class SavedState
     {
         int TextColor;
@@ -37,6 +41,7 @@ public class TtsResponseView extends Activity
     public TtsResponseView()
     {
         super();
+        _speechKit = SpeechKitHolder.getSpeechKit(this);
     }
     
     /** Called when the activity is first created. */
@@ -161,7 +166,7 @@ public class TtsResponseView extends Activity
                 updateCurrentText("Playing text: \"" + text + "\"", Color.GREEN, false);
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Vocalizer.Listener.onSpeakingBegin: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        + _speechKit.getSessionId() + "]");
             }
 
             @Override
@@ -178,7 +183,7 @@ public class TtsResponseView extends Activity
                 }
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Vocalizer.Listener.onSpeakingDone: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        + _speechKit.getSessionId() + "]");
             }
         };
         
@@ -188,7 +193,7 @@ public class TtsResponseView extends Activity
         if (savedState == null)
         {
             // Create a single Vocalizer here.
-            _vocalizer = MainView2.getSpeechKit().createVocalizerWithLanguage("en_US", vocalizerListener, new Handler());
+            _vocalizer = _speechKit.createVocalizerWithLanguage("en_US", vocalizerListener, new Handler());
 
             // Get selected voice from the spinner and set the Vocalizer voice
             /*

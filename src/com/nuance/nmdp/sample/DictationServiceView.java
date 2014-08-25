@@ -20,6 +20,7 @@ import com.blake.voice.tasks.DisplayMessageActivity;
 import com.nuance.nmdp.speechkit.Recognition;
 import com.nuance.nmdp.speechkit.Recognizer;
 import com.nuance.nmdp.speechkit.SpeechError;
+import com.nuance.nmdp.speechkit.SpeechKit;
 
 
 public class DictationServiceView extends Activity
@@ -36,6 +37,8 @@ public class DictationServiceView extends Activity
     private boolean _destroyed;
 
     private static int listenTryCount;
+
+    private SpeechKit _speechKit = null;
 
     private class SavedState
     {
@@ -54,6 +57,7 @@ public class DictationServiceView extends Activity
         _currentRecognizer = null;
         _listeningDialog = null;
         _destroyed = true;
+        _speechKit = SpeechKitHolder.getSpeechKit(this);
     }
 
 
@@ -109,9 +113,9 @@ public class DictationServiceView extends Activity
                 setResults(new Recognition.Result[0]);
 
                 if (v == dictationButton)
-                    _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
+                    _currentRecognizer = _speechKit.createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
                 else
-                    _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Search, Recognizer.EndOfSpeechDetection.Short, "en_US", _listener, _handler);
+                    _currentRecognizer = _speechKit.createRecognizer(Recognizer.RecognizerType.Search, Recognizer.EndOfSpeechDetection.Short, "en_US", _listener, _handler);
                 _currentRecognizer.start();
             }
         };
@@ -281,7 +285,7 @@ public class DictationServiceView extends Activity
                 setResult(detail + "\n" + suggestion);
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Recognizer.Listener.onError: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        + _speechKit.getSessionId() + "]");
             }
 
             @Override
@@ -294,7 +298,7 @@ public class DictationServiceView extends Activity
                 setResults(rs);
                 // for debugging purpose: printing out the speechkit session id
                 android.util.Log.d("Nuance SampleVoiceApp", "Recognizer.Listener.onResults: session id ["
-                        + MainView2.getSpeechKit().getSessionId() + "]");
+                        + _speechKit.getSessionId() + "]");
                 //here we can capture the text...
                 //TODO look through phrases from results
                 System.out.println("bedbug********************************results 0-" + rs[0].getText());
@@ -338,7 +342,7 @@ public class DictationServiceView extends Activity
                     }else {
                         _currentRecognizer = null;
                         if (_currentRecognizer == null)
-                            _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
+                            _currentRecognizer = _speechKit.createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
                         listenTryCount++;
                         _currentRecognizer.start();
                     }

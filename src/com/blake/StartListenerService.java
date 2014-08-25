@@ -85,22 +85,26 @@ public class StartListenerService extends Service {
 
        // _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
         initSpeechKit();
-        _currentRecognizer = _speechKit.createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
+        _currentRecognizer = SpeechKitHolder.getSpeechKit(this).createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
 
 
         //    _listeningDialog = null;
         _listener.onRecordingBegin(_currentRecognizer);
         _currentRecognizer.setListener(_listener);
-
-
         Toast.makeText(this, "Q Service Listener onStartCommand", Toast.LENGTH_LONG).show();
         _destroyed = false;
         //TODO: START THE LISTENER, we don't need to press no stinkin button
         if (_currentRecognizer != null) {
+            Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);
+            _speechKit.setDefaultRecognizerPrompts(beep, Prompt.vibration(100), null, null);
             _currentRecognizer.start();
         }else{
+            _speechKit = SpeechKitHolder.getSpeechKit(this);
+            _speechKit.connect();
            // _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
-            _speechKit.createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
+            _currentRecognizer = _speechKit .createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
+            Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);
+            _speechKit.setDefaultRecognizerPrompts(beep, Prompt.vibration(100), null, null);
             _listener.onRecordingBegin(_currentRecognizer);
             _currentRecognizer.setListener(_listener);
             _currentRecognizer.start();
@@ -144,11 +148,11 @@ public class StartListenerService extends Service {
 
       //  _speechKit = SpeechKit.initialize(getApplicationContext(), AppInfo.SpeechKitAppId, AppInfo.SpeechKitServer, AppInfo.SpeechKitPort, AppInfo.SpeechKitSsl, AppInfo.SpeechKitApplicationKey);
         _speechKit = SpeechKitHolder.getSpeechKit(getApplicationContext());
-
-        _speechKit.connect();
         // TODO: Keep an eye out for audio prompts not working on the Droid 2 or other 2.2 devices.
         Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);
         _speechKit.setDefaultRecognizerPrompts(beep, Prompt.vibration(100), null, null);
+        _speechKit.connect();
+
     }
 
 
@@ -277,6 +281,9 @@ public class StartListenerService extends Service {
                         _currentRecognizer.cancel();
                         _currentRecognizer = null;
                         if (_currentRecognizer == null)
+                            _speechKit = SpeechKitHolder.getSpeechKit(getApplicationContext());
+                        Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);
+                        _speechKit.setDefaultRecognizerPrompts(beep, Prompt.vibration(100), null, null);
                        //     _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
                             _currentRecognizer = _speechKit.createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
                         listenTryCount++;
@@ -298,6 +305,7 @@ public class StartListenerService extends Service {
       //  intent.putExtra("caller", "StartListenerService");
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        stopSelf();
         startActivity(intent);
 
     }
