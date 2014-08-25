@@ -25,7 +25,7 @@ import com.nuance.nmdp.speechkit.SpeechKit;
 
 public class MainView2 extends Activity {
 
-    private static SpeechKit _speechKit;
+
     private static final String TAG = "MainView2";
     public static final String PREFS_NAME = "MyPrefsFile";
     public static String username;
@@ -65,10 +65,6 @@ public class MainView2 extends Activity {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
-        // If this Activity is being recreated due to a config change (e.g. 
-        // screen rotation), check for the saved SpeechKit instance.
-     //   _speechKit = (SpeechKit) getLastNonConfigurationInstance();
-        _speechKit = SpeechKitHolder.getSpeechKit(this);
 
         boolean isNetWorkAvail = false;
         if (isNetworkAvailable(getApplicationContext())) {
@@ -92,17 +88,7 @@ public class MainView2 extends Activity {
         }
         Log.d(TAG, "online=" + online);
         Log.d(TAG, "networked=" + isNetWorkAvail);
-        //only initialize if speechkit is null....
-        if (_speechKit != null && (online | isNetWorkAvail)) {
-            Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);
-            _speechKit.setDefaultRecognizerPrompts(beep, Prompt.vibration(100), null, null);
-            _speechKit.connect();
-        }else if (_speechKit == null && (online | isNetWorkAvail)){
-            _speechKit = SpeechKitHolder.getSpeechKit(this);
-            Prompt beep = _speechKit.defineAudioPrompt(R.raw.beep);
-            _speechKit.setDefaultRecognizerPrompts(beep, Prompt.vibration(100), null, null);
-            _speechKit.connect();
-        }
+
 
 
         Button.OnClickListener l = new Button.OnClickListener() {
@@ -130,6 +116,7 @@ public class MainView2 extends Activity {
         buttonQ.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
 
                 Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -187,19 +174,18 @@ public class MainView2 extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (_speechKit != null) {
-            _speechKit.release();
-            _speechKit = null;
-            if(Config.IS_MULTIUSER){
-                //destroy any data on quit of application.
-                SharedPreferences settings = getSharedPreferences(MainView2.PREFS_NAME, 0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.clear();
-                editor.commit();
-                MySQLiteHelper db = new MySQLiteHelper(this);
-                db.deleteAllData();
-            }
+
+        if(Config.IS_MULTIUSER) {
+            //destroy any data on quit of application.
+            SharedPreferences settings = getSharedPreferences(MainView2.PREFS_NAME, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.clear();
+            editor.commit();
+            MySQLiteHelper db = new MySQLiteHelper(MainView2.this);
+            db.deleteAllData();
         }
+
+
     }
 
 
@@ -208,14 +194,7 @@ public class MainView2 extends Activity {
         super.onStop();
     }
 
-    @Override
-    public Object onRetainNonConfigurationInstance() {
-        // Save the SpeechKit instance, because we know the Activity will be
-        // immediately recreated.
-        SpeechKit sk = _speechKit;
-        _speechKit = null; // Prevent onDestroy() from releasing SpeechKit
-        return sk;
-    }
+
 
 
     public static boolean isNetworkAvailable(Context context) {
@@ -325,7 +304,7 @@ public class MainView2 extends Activity {
             // todo: with this setup, you won't have to tell it your name, heh heh...
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-        //    finish();
+            finish();
         } else {
             //create bean
             bean = new ClockworkUserBean();
@@ -336,6 +315,7 @@ public class MainView2 extends Activity {
             bean.setPhone(phone);
         }
     }
+
 
 
 

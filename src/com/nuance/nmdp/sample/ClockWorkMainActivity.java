@@ -84,9 +84,6 @@ public class ClockWorkMainActivity extends Activity implements OnClockStateTaskC
             int workerId = Integer.valueOf(settings.getString("worker_id", "0"));
             int tsheetsId = Integer.valueOf(settings.getString("tsheets_id", "0"));
             String phone = settings.getString("phone", "8005551212");
-
-
-
             user = new ClockworkUserBean();
             user.setWorkerId(workerId);
             user.setTsheetsId(tsheetsId);
@@ -96,22 +93,13 @@ public class ClockWorkMainActivity extends Activity implements OnClockStateTaskC
             if(user.getWorkerId() !=0 || user.getTsheetsId() !=0){
                 entry = new ClockWorkUserEntry(user.getWorkerId());
             }
-
             //check app login state / status, results are received by onTaskCompleted(String value)
             String clockState = settings.getString("clock_state", "foo");
             if(clockState.equals("foo")){
                 new ClockStateTask(this,this).execute(String.valueOf(user.getWorkerId()));
             }else{
-                if(clockState.equals("in")){
-                    setUIClockedIn();
-                }else if(clockState.equals("out")){
-                    setUIClockedOut();
-                }
-
-
                 Intent i = new Intent(this, WhereActivity.class);
                 if (clockCmd.equals("in")) {
-
                     entry.setEntryType(ENTRY_TYPE_LOGIN);
                     startActivityForResult(i, 0);
                 } else {
@@ -119,7 +107,6 @@ public class ClockWorkMainActivity extends Activity implements OnClockStateTaskC
                     startActivityForResult(i, 1);
                 }
             }
-
         }else{
             setGUI();
         }
@@ -222,7 +209,7 @@ public class ClockWorkMainActivity extends Activity implements OnClockStateTaskC
                     setUIClockedIn();
                 } else if (Integer.parseInt(value) == 1) {
                     isLoggedIn = false;
-                    editor.putString("clock_state", "in");
+                    editor.putString("clock_state", "out");
                     setUIClockedOut();
                 }
                 editor.commit();

@@ -84,8 +84,9 @@ public class StartListenerService extends Service {
         //_currentRecognizer = null;
 
        // _currentRecognizer = MainView2.getSpeechKit().createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
-        initSpeechKit();
-        _currentRecognizer = SpeechKitHolder.getSpeechKit(this).createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
+     //   initSpeechKit();
+        _speechKit = SpeechKitHolder.getSpeechKit(this);
+        _currentRecognizer =  _speechKit .createRecognizer(Recognizer.RecognizerType.Dictation, Recognizer.EndOfSpeechDetection.Long, "en_US", _listener, _handler);
 
 
         //    _listeningDialog = null;
