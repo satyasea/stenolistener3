@@ -5,6 +5,6 @@ package com.blake;
  */
 public class Config {
     public static boolean IS_AEH_BUILD = true;
-    public static boolean IS_MULTIUSER = false;
-    public static boolean IS_DEMO = false;
+    public static boolean IS_MULTIUSER = true;
+    public static boolean IS_DEMO = true;
 }
