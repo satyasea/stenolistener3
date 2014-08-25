@@ -29,6 +29,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <activity android:name=".DictationView"
@@ -40,6 +41,7 @@
         <activity android:name="com.blake.login.LoginActivity"
                   android:screenOrientation="portrait"
                   android:label="@string/app_name">
+
         </activity>
 
         <activity android:name=".CommandView"
